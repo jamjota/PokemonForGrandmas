@@ -4,24 +4,43 @@ import viteLogo from '/vite.svg';
 import './App.css';
 
 function App() {
-   const [userInput, setUserInput] = useState('');
+  const [userInput, setUserInput] = useState('');
+  const [error, setError] = useState(null);
 
-    const fetchPokemon= async () => {
-      try{
-        const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${userInput}`)
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const json = await response.json();
-        console.log(json.name);
+  const fetchPokemon = async () => {
+    try {
+      const response = await fetch(
+        `https://pokeapi.co/api/v2/pokemon?limit=1300`
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-      catch{
+      const data = await response.json();
+      console.log('data:', data);
+      return data;
+    } catch (error) {
+      setError(error.message);
+    }
+  };
 
-      }};
+  const narrowSearch = async () => {
+    try {
+      const list = (await fetchPokemon()).results;
+      const filtered = list.filter((p) =>
+        p.name.toLowerCase().includes(userInput.toLowerCase())
+      );
+      console.log('filtered:', filtered);
+      return filtered;
+    } catch (error) {
+      setError(error.message);
+    }
+  };
 
-      const handleInputChange = (event) => {
-        setUserInput(event.target.value);
-      };
+  
+  const handleInputChange = (event) => {
+    setUserInput(event.target.value);
+    console.log('user input:', userInput);
+  };
 
   return (
     <>
@@ -41,11 +60,11 @@ function App() {
           onChange={handleInputChange}
           placeholder='Enter Pokemon Name'
         ></input>
-        <button onClick={fetchPokemon}>Fetch Pokemon</button>
+        <button onClick={narrowSearch}>Fetch Pokemon</button>
       </div>
     </>
   );
 }
 
 export default App;
-//  
+
