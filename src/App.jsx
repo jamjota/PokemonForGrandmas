@@ -4,7 +4,24 @@ import viteLogo from '/vite.svg';
 import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0);
+   const [userInput, setUserInput] = useState('');
+
+    const fetchPokemon= async () => {
+      try{
+        const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${userInput}`)
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const json = await response.json();
+        console.log(json.name);
+      }
+      catch{
+
+      }};
+
+      const handleInputChange = (event) => {
+        setUserInput(event.target.value);
+      };
 
   return (
     <>
@@ -20,14 +37,15 @@ function App() {
         <h1>Pokemon for Grandmas</h1>
         <input
           type='text'
-          id='pokemonName'
+          value={userInput}
+          onChange={handleInputChange}
           placeholder='Enter Pokemon Name'
         ></input>
-        <button>Fetch Pokemon</button>
+        <button onClick={fetchPokemon}>Fetch Pokemon</button>
       </div>
     </>
   );
 }
 
 export default App;
-//  onClick={FetchPokemon}
+//  
