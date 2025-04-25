@@ -6,10 +6,10 @@ import './App.css';
 function App() {
   const [userInput, setUserInput] = useState('');
   const [error, setError] = useState(null);
-  const [filteredMons, setFilteredMons] = useState([])
-  const [filteredNames, setFilteredNames] = useState([])
+  const [filteredMons, setFilteredMons] = useState([]);
+  const [filteredNames, setFilteredNames] = useState([]);
 
-//this fetches the API data and filters it into an array of lightweight poke' objs (name, url only so far)
+  //this fetches the API data and filters it into an array of lightweight poke' objs (name, url only so far)
   const fetchPokemon = async () => {
     try {
       const response = await fetch(
@@ -24,24 +24,24 @@ function App() {
 
       // this takes the results and iterates over them to fetch the additional data from their urls
       const pokemon = [];
-  
-      for (const stubs of results){
+
+      for (const stubs of results) {
         stubs.data = await fetch(stubs.url).then((res) => res.json());
         pokemon.push(stubs.data);
       }
- 
-      const matches = pokemon.filter(p =>
-        p.types.some(t => t.type.name === userInput.toLowerCase())
+
+      const matches = pokemon.filter((p) =>
+        p.types.some((t) => t.type.name === userInput.toLowerCase())
       );
-      setFilteredMons(matches.map(m => m.sprites.front_default));
-      setFilteredNames(matches.map(m => m.name));
-      // 
+      setFilteredMons(matches.map((m) => m.sprites.front_default));
+      setFilteredNames(matches.map((m) => m.name));
+      //
       // console.log('filtered mons:', filteredMons)
     } catch (error) {
       setError(error.message);
     }
   };
-  
+
   const handleInputChange = (event) => {
     setUserInput(event.target.value);
     // console.log('user input:', userInput);
@@ -59,7 +59,12 @@ function App() {
       </div>
       <div>
         <h1>Pokemon for Grandmas</h1>
-        <h3>Just type in what you know about that pokemon and we'll find you 'mons that match!</h3>
+        <h3>
+          Just type what you know about that pokemon and we'll find you 'mons
+          that match!
+        </h3>
+      </div>
+      <div>
         <input
           type='text'
           value={userInput}
@@ -67,12 +72,54 @@ function App() {
           placeholder='Enter Pokemon Info'
         ></input>
         <button onClick={fetchPokemon}>Fetch Pokemon</button>
-      </div><br/>
+      </div>
+
+      {/* This section is to change from input text to drop down menu (not done yet, though!)
+      <div className='dropdown'>
+        <button onClick={fetchPokemon} className='dropbtn'>
+          Type
+        </button>
+        <div id='myDropdown' className='dropdown-content'>
+          <a href='#'>Fire</a>
+          <br />
+          <a href='#'>Grass</a>
+          <br />
+          <a href='#'>Water</a>
+          <br />
+        </div>
+      </div>
+      <div className='dropdown'>
+        <button onClick={fetchPokemon} className='dropbtn'>
+          Size
+        </button>
+        <div id='myDropdown' className='dropdown-content'>
+          <a href='#'>Less than 50kg</a>
+          <br />
+          <a href='#'>50-100kg</a>
+          <br />
+          <a href='#'>More than 100kg</a>
+          <br />
+        </div>
+      </div>
+      <div className='dropdown'>
+        <button onClick={fetchPokemon} className='dropbtn'>
+          Games
+        </button>
+        <div id='myDropdown' className='dropdown-content'>
+          <a href='#'>Red</a>
+          <br />
+          <a href='#'>Blue</a>
+          <br />
+          <a href='#'>Yellow</a>
+          <br />
+        </div>
+      </div> */}
+      <br />
       <div>
         {filteredMons.map((mons, i) => (
-          <span key={i} style={{ marginRight: "0.5rem" }}>
-          <img src={mons} alt="image of pokemon" title={filteredNames[i]}/>
-        </span>
+          <span key={i} style={{ marginRight: '0.5rem' }}>
+            <img src={mons} alt='image of pokemon' title={filteredNames[i]} />
+          </span>
         ))}
       </div>
     </>
@@ -80,4 +127,3 @@ function App() {
 }
 
 export default App;
-
